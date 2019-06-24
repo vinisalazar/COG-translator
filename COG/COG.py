@@ -63,7 +63,7 @@ class COGTranslator(object):
         try:
             while cls.codes[cog_code]:
                 if translate:
-                    return COGFunctions.cog_letter((cls.codes[cog_code]["func"]))
+                    return COGFunctions.cat_from_letter((cls.codes[cog_code]["func"]))
                 else:
                     return cls.codes[cog_code]["func"]
         except KeyError:
@@ -154,7 +154,21 @@ def name_from_code(cog_code, *args, **kwargs):
 
 def cat_from_letter(cog_letter, *args, **kwargs):
     """
-    Takes COG letter and returns COG categories, higher and lower.
+    Takes COG letter and returns a dictionary with letters as keys and
+    COG categories as values (first value is higher category and second
+    value is lower category).
     """
     cogf = COGFunctions()
     return cogf.cat_from_letter(cog_letter, *args, **kwargs)
+
+
+def letter_from_code(cog_code, *args, **kwargs):
+    """
+    Takes COG code (e.g.: COG0001) and returns a dict with COG letter as keys
+    and categories as values.
+
+    Can specify dict_output=False to return a string.
+    """
+    cogt = COGTranslator(load=False)
+    cogt.load_translation_tab(print_=False)
+    return cogt.letter_from_code(cog_code, *args, **kwargs)
