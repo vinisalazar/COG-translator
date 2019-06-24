@@ -1,1 +1,1 @@
-from .COG import COGTranslator
+from COG import COGTranslator
