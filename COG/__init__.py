@@ -1,3 +1,4 @@
+name = "COG"
 from .COG import (
     COGTranslator,
     COGFunctions,
