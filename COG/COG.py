@@ -1,6 +1,7 @@
 """
 Our main class for translating.a
 """
+from os import path
 
 
 class COGTranslator(object):
@@ -9,7 +10,7 @@ class COGTranslator(object):
     attribute.
     """
 
-    translation_tab = "data/cognames2003-2014.tab"
+    translation_tab = path.join(path.dirname(__file__), "cognames2003-2014.tab")
 
     def __init__(self, load=True):
         super(COGTranslator, self).__init__()
