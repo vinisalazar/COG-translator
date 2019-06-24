@@ -18,7 +18,7 @@ class COGTranslator(object):
             self.load_translation_tab()
 
     @classmethod
-    def load_translation_tab(cls):
+    def load_translation_tab(cls, print_=True):
         """
         Loads the COG translation tab into memory as a dictionary.
         """
@@ -31,12 +31,13 @@ class COGTranslator(object):
                 row = row.split("\t")
                 cls.codes[row[0]] = {"func": row[1], "name": row[2].strip()}
 
-        print(f"Loaded {len(cls.codes)} COG names into memory.")
+        if print_:
+            print(f"Loaded {len(cls.codes)} COG names into memory.")
 
     @classmethod
-    def get_name(cls, cog_code):
+    def name_from_code(cls, cog_code):
         """
-        Gets COG name from COG code.
+        Gets COG name from COG code (e.g. COG0001)
         """
         if not cls.codes:
             try:
@@ -49,8 +50,32 @@ class COGTranslator(object):
         except KeyError:
             raise Exception("COG code not found. Please check your COG code.")
 
+    @classmethod
+    def letter_from_code(cls, cog_code, translate=True):
+        """
+        Gets COG letter from COG code (e.g. COG0001)
+        """
+        if not cls.codes:
+            try:
+                cls.load_translation_tab()
+            except:
+                raise Exception("Couldn't load translation tab.")
+        try:
+            while cls.codes[cog_code]:
+                if translate:
+                    return COGFunctions.cog_letter((cls.codes[cog_code]["func"]))
+                else:
+                    return cls.codes[cog_code]["func"]
+        except KeyError:
+            raise Exception("COG code not found. Please check your COG code.")
+
 
 class COGFunctions(object):
+
+    """
+    COG categories. Taken from the CLoVR website at:
+    http://clovr.org/docs/clusters-of-orthologous-groups-cogs/
+    """
 
     COG_letters = {
         "Cellular processes and signaling": {
@@ -89,12 +114,47 @@ class COGFunctions(object):
     }
 
     @classmethod
-    def cog_letter(cls, cog_letter):
+    def cat_from_letter(cls, cog_letter, dict_output=True):
+        """
+        Gets COG higher and lower group from COG letter.
+        Returns dict with input letter as key and groups as value (inside tuple).
+        """
         functions = dict()
-        for k, v in cls.COG_letters.items():
-            for k_, v_ in v.items():
-                for char in cog_letter:
+        for char in cog_letter:
+            for k, v in cls.COG_letters.items():
+                for k_, v_ in v.items():
                     if char == k_:
                         functions[char] = (k, v_)
+            try:
+                functions[char]
+            except KeyError:
+                print(f"{char} wasn't found! Check if it is a valid COG letter.")
 
-        return functions
+        if functions:
+            if dict_output:
+                return functions
+            else:
+                for k, v in functions.items():
+                    print(k, v)
+
+
+"""
+These are functions to be called out of the class scope.
+"""
+
+
+def name_from_code(cog_code, *args, **kwargs):
+    """
+    Takes COG code (e.g.: COG0001) and returns COG name (Glutamate-1-semialdehyde aminotransferase)
+    """
+    cogt = COGTranslator(load=False)
+    cogt.load_translation_tab(print_=False)
+    return cogt.name_from_code(cog_code, *args, **kwargs)
+
+
+def cat_from_letter(cog_letter, *args, **kwargs):
+    """
+    Takes COG letter and returns COG categories, higher and lower.
+    """
+    cogf = COGFunctions()
+    return cogf.cat_from_letter(cog_letter, *args, **kwargs)
