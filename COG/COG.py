@@ -1,5 +1,5 @@
 """
-Our main class for translating.a
+Our main class for translating COG codes and letters.
 """
 from os import path
 
@@ -48,3 +48,53 @@ class COGTranslator(object):
                 return cls.codes[cog_code]["name"]
         except KeyError:
             raise Exception("COG code not found. Please check your COG code.")
+
+
+class COGFunctions(object):
+
+    COG_letters = {
+        "Cellular processes and signaling": {
+            "D": "Cell cycle control, cell division, chromosome partitioning",
+            "M": "Cell wall/membrane/envelope biogenesis",
+            "N": "Cell motility",
+            "O": "Post-translational modification, protein turnover, and chaperones",
+            "T": "Signal transduction mechanisms",
+            "U": "Intracellular trafficking, secretion, and vesicular transport",
+            "V": "Defense mechanisms",
+            "W": "Extracellular structures",
+            "Y": "Nuclear structure",
+            "Z": "Cytoskeleton",
+        },
+        "Information storage and processing": {
+            "A": "RNA processing and modification",
+            "B": "Chromatin structure and dynamics",
+            "J": "Translation, ribosomal structure and biogenesis",
+            "K": "Transcription",
+            "L": "Replication, recombination and repair",
+        },
+        "Metabolism": {
+            "C": "Energy production and conversion",
+            "E": "Amino acid transport and metabolism",
+            "F": "Nucleotide transport and metabolism",
+            "G": "Carbohydrate transport and metabolism",
+            "H": "Coenzyme transport and metabolism",
+            "I": "Lipid transport and metabolism",
+            "P": "Inorganic ion transport and metabolism",
+            "Q": "Secondary metabolites biosynthesis, transport, and catabolism",
+        },
+        "Poorly characterized": {
+            "R": "General function prediction only",
+            "S": "Function unknown",
+        },
+    }
+
+    @classmethod
+    def cog_letter(cls, cog_letter):
+        functions = dict()
+        for k, v in cls.COG_letters.items():
+            for k_, v_ in v.items():
+                for char in cog_letter:
+                    if char == k_:
+                        functions[char] = (k, v_)
+
+        return functions
