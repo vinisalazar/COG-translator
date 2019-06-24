@@ -10,8 +10,7 @@ or
 ```
 git clone https://github.com/vinisalazar/COG-translator.git
 cd COG-translator
-python setup.py install  # or even
-pip install .
+python setup.py install  # or even `pip install .`
 ```
 
 #### Usage
