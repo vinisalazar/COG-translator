@@ -89,6 +89,7 @@ class COGFunctions(object):
             "W": "Extracellular structures",
             "Y": "Nuclear structure",
             "Z": "Cytoskeleton",
+            "X": "Mobilome: prophages, transposons"
         },
         "Information storage and processing": {
             "A": "RNA processing and modification",
