@@ -2,6 +2,7 @@
 Our main class for translating COG codes and letters.
 """
 from os import path
+import csv
 
 
 class COGTranslator(object):
@@ -77,42 +78,38 @@ class COGFunctions(object):
     http://clovr.org/docs/clusters-of-orthologous-groups-cogs/
     """
 
-    COG_letters = {
-        "Cellular processes and signaling": {
-            "D": "Cell cycle control, cell division, chromosome partitioning",
-            "M": "Cell wall/membrane/envelope biogenesis",
-            "N": "Cell motility",
-            "O": "Post-translational modification, protein turnover, and chaperones",
-            "T": "Signal transduction mechanisms",
-            "U": "Intracellular trafficking, secretion, and vesicular transport",
-            "V": "Defense mechanisms",
-            "W": "Extracellular structures",
-            "Y": "Nuclear structure",
-            "Z": "Cytoskeleton",
-            "X": "Mobilome: prophages, transposons"
-        },
-        "Information storage and processing": {
-            "A": "RNA processing and modification",
-            "B": "Chromatin structure and dynamics",
-            "J": "Translation, ribosomal structure and biogenesis",
-            "K": "Transcription",
-            "L": "Replication, recombination and repair",
-        },
-        "Metabolism": {
-            "C": "Energy production and conversion",
-            "E": "Amino acid transport and metabolism",
-            "F": "Nucleotide transport and metabolism",
-            "G": "Carbohydrate transport and metabolism",
-            "H": "Coenzyme transport and metabolism",
-            "I": "Lipid transport and metabolism",
-            "P": "Inorganic ion transport and metabolism",
-            "Q": "Secondary metabolites biosynthesis, transport, and catabolism",
-        },
-        "Poorly characterized": {
-            "R": "General function prediction only",
-            "S": "Function unknown",
-        },
-    }
+    def get_COG_letters():
+        d = {}
+        with open(path.join(path.dirname(__file__), "fun2003-2014.tab")) as csv_file:
+            next(csv_file)
+                for row in csv.reader(csv_file, delimiter='\t'):
+            d[row[0]] = row[1]
+
+        d_ = {}
+        def get_broad_category(letter):
+            if letter in "DMNOTUVWYZX":
+                return "Cellular processes and signaling"
+            elif letter in "ABJKL":
+                return "Information storage and processing"
+            elif letter in "CEFGHIPQ":
+                return "Metabolism"
+            elif letter in "RS":
+                return "Poorly characterized"
+            else:
+                return "Unknown"
+
+        for k, v in d.items():
+            d_[get_broad_category(k)] = dict()
+
+        for k_, v_ in d_.items():
+            for k, v in d.items():
+                if k_ == get_broad_category(k):
+                    v_[k] = v
+
+        return d_
+
+
+    COG_letters = get_COG_letters()
 
     @classmethod
     def cat_from_letter(cls, cog_letter, dict_output=True):
