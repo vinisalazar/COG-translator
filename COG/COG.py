@@ -132,8 +132,9 @@ class COGFunctions(object):
             if dict_output:
                 return functions
             else:
-                output = (*list(functions.keys()) + list(*functions.values(), ), )
+                output = [(k, v) for k, v in functions.items()]
                 return output
+
 
 
 """
