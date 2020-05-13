@@ -82,8 +82,8 @@ class COGFunctions(object):
         d = {}
         with open(path.join(path.dirname(__file__), "fun2003-2014.tab")) as csv_file:
             next(csv_file)
-                for row in csv.reader(csv_file, delimiter='\t'):
-            d[row[0]] = row[1]
+            for row in csv.reader(csv_file, delimiter='\t'):
+                d[row[0]] = row[1]
 
         d_ = {}
         def get_broad_category(letter):
