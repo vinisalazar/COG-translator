@@ -112,7 +112,7 @@ class COGFunctions(object):
     COG_letters = get_COG_letters()
 
     @classmethod
-    def cat_from_letter(cls, cog_letter, dict_output=True):
+    def cat_from_letter(cls, cog_letter, dict_output=False):
         """
         Gets COG higher and lower group from COG letter.
         Returns dict with input letter as key and groups as value (inside tuple).
@@ -132,8 +132,8 @@ class COGFunctions(object):
             if dict_output:
                 return functions
             else:
-                for k, v in functions.items():
-                    print(k, v)
+                output = (*list(functions.keys()) + list(*functions.values(), ), )
+                return output
 
 
 """
