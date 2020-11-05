@@ -3,6 +3,10 @@
 
 Pure Python package for easy translation between COG names, codes and categories.
 
+### Notice
+The COG database has been updated in September 2020 and thus this repository is now deprecated. It works well for the 2014 version of the COG database.
+I will try to update it whenever possible.
+
 #### Installation
 `pip install COG-translator`
 
